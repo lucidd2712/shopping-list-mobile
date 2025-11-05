@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:football_news/menu.dart';
+import 'package:football_news/screens/menu.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const FootballNewsApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class FootballNewsApp extends StatelessWidget {
+  const FootballNewsApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Football News',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.blue)
-            .copyWith(secondary: Colors.blueAccent[400]),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
+        useMaterial3: true,
       ),
-      home: MyHomePage(), // const & parameter title dihapus
+      home: const MyHomePage(),
     );
   }
 }
-
