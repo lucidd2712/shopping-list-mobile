@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:football_news/screens/newslist_form.dart';
+import 'package:football_news/screens/news_entry_list.dart';
+import 'package:football_news/screens/login.dart';
+import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:provider/provider.dart';
 
 class Item {
   final String name;
@@ -14,13 +18,18 @@ class ItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Ambil CookieRequest dari Provider (wajib untuk logout)
+    final request = context.watch<CookieRequest>();
+
     return Material(
       color: Colors.indigo.shade50,
       borderRadius: BorderRadius.circular(12),
       child: InkWell(
         borderRadius: BorderRadius.circular(12),
-        onTap: () {
-          // SnackBar
+
+        // dibuat async supaya bisa await logout
+        onTap: () async {
+          // SnackBar umum
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
@@ -29,14 +38,59 @@ class ItemCard extends StatelessWidget {
               ),
             );
 
-          // Navigasi sesuai tombol
+          // Navigasi & aksi sesuai nama tombol
           if (item.name == "Add News") {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const NewsFormPage()),
+              MaterialPageRoute(
+                builder: (context) => const NewsFormPage(),
+              ),
+            );
+          } else if (item.name == "See Football News") {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const NewsEntryListPage(),
+              ),
             );
           }
+
+          // Fitur LOGOUT
+          else if (item.name == "Logout") {
+            // GANTI URL SESUAI ENVIRONMENT:
+            // - Emulator: http://10.0.2.2:8000/auth/logout/
+            // - Chrome:   http://localhost:8000/auth/logout/
+            final response = await request.logout(
+              "http://10.0.2.2:8000/auth/logout/",
+            );
+
+            String message = response["message"];
+
+            if (context.mounted) {
+              if (response['status']) {
+                String uname = response["username"];
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text("$message See you again, $uname."),
+                  ),
+                );
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const LoginPage(),
+                  ),
+                );
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(message),
+                  ),
+                );
+              }
+            }
+          }
         },
+
         child: Container(
           padding: const EdgeInsets.all(16),
           child: Column(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:football_news/screens/menu.dart';
 import 'package:football_news/screens/newslist_form.dart';
+import 'package:football_news/screens/news_entry_list.dart';
 
 class LeftDrawer extends StatelessWidget {
   const LeftDrawer({super.key});
@@ -38,6 +39,8 @@ class LeftDrawer extends StatelessWidget {
               ],
             ),
           ),
+
+          // Home
           ListTile(
             leading: const Icon(Icons.home_outlined),
             title: const Text('Home'),
@@ -48,6 +51,8 @@ class LeftDrawer extends StatelessWidget {
               );
             },
           ),
+
+          // Add News
           ListTile(
             leading: const Icon(Icons.post_add),
             title: const Text('Add News'),
@@ -55,6 +60,20 @@ class LeftDrawer extends StatelessWidget {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (context) => const NewsFormPage()),
+              );
+            },
+          ),
+
+          // News List (INI YANG KAMU MAU TAMBAH)
+          ListTile(
+            leading: const Icon(Icons.add_reaction_rounded),
+            title: const Text('News List'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const NewsEntryListPage(),
+                ),
               );
             },
           ),
